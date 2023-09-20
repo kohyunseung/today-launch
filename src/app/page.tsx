@@ -129,9 +129,18 @@ export default function Home() {
       //   body: JSON.stringify(message),
       // });
 
-      const response = await axios.post("/api/chat", {
-        message,
-      });
+      const response = await axios.post(
+        "/api/chat",
+        {
+          message,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods:": "*",
+          },
+        }
+      );
 
       // reset field if OK
       setMsg("");
@@ -142,9 +151,18 @@ export default function Home() {
 
   const addMenu = async () => {
     if (menuInput) {
-      const response = await axios.post("/api/menu", {
-        menu: menuInput,
-      });
+      const response = await axios.post(
+        "/api/menu",
+        {
+          menu: menuInput,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Methods:": "*",
+          },
+        }
+      );
 
       // const resp = await fetch("/api/menu", {
       //   method: "POST",
@@ -335,9 +353,18 @@ export default function Home() {
   };
 
   const sendSpin = async () => {
-    const response = await axios.post("/api/spin", {
-      menu,
-    });
+    const response = await axios.post(
+      "/api/spin",
+      {
+        menu,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Methods:": "*",
+        },
+      }
+    );
 
     // const resp = await fetch("/api/spin", {
     //   method: "POST",
