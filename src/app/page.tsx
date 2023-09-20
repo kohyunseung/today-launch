@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
+import { getCurrentDate } from "@/utils/common";
+
 import styles from "./page.module.css";
 
 const user = "User_" + String(new Date().getTime()).substr(-3);
@@ -50,12 +52,12 @@ export default function Home() {
 
   useEffect((): any => {
     // connect to socket server
-    const socket = io("http://localhost:3000", {
-      path: "/api/socketio",
-    });
-    // const socket = io("https://today-launch.vercel.app", {
+    // const socket = io("http://localhost:3000", {
     //   path: "/api/socketio",
     // });
+    const socket = io("https://today-launch.vercel.app", {
+      path: "/api/socketio",
+    });
 
     // log socket connection
     socket.on("connect", () => {
@@ -337,7 +339,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.header}>
-        <h1>20230920 메뉴정하자!!!!!!</h1>
+        <h1>{getCurrentDate()} 메뉴정하자!!!!!!</h1>
       </div>
       <div className={styles.chat}>
         <input
