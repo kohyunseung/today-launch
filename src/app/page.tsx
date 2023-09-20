@@ -53,12 +53,12 @@ export default function Home() {
 
   useEffect((): any => {
     // connect to socket server
-    // const socket = io("", {
-    //   path: "/api/socketio",
-    // });
-    const socket = io("https://today-launch.vercel.app", {
+    const socket = io("", {
       path: "/api/socketio",
     });
+    // const socket = io("https://today-launch.vercel.app", {
+    //   path: "/api/socketio",
+    // });
 
     // log socket connection
     socket.on("connect", () => {
@@ -137,7 +137,6 @@ export default function Home() {
         {
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Methods:": "*",
           },
         }
       );
@@ -159,7 +158,6 @@ export default function Home() {
         {
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Methods:": "*",
           },
         }
       );
@@ -361,7 +359,6 @@ export default function Home() {
       {
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Methods:": "*",
         },
       }
     );

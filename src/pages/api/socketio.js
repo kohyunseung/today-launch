@@ -1,5 +1,5 @@
 import { NextApiRequest } from "next";
-import { NextApiResponseServerIO } from "@/types/chat";
+// import { NextApiResponseServerIO } from "@/types/chat";
 import { Server as ServerIO } from "socket.io";
 import { Server as NetServer } from "http";
 
@@ -9,11 +9,11 @@ export const config = {
   },
 };
 
-export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+export default async (req, res) => {
   if (!res.socket.server.io) {
     console.log("New Socket.io server...");
     // adapt Next's net Server to http Server
-    const httpServer: NetServer = res.socket.server as any;
+    const httpServer = res.socket.server;
     const io = new ServerIO(httpServer, {
       path: "/api/socketio",
       addTrailingSlash: false,
