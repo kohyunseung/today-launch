@@ -17,7 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
 
   // console.log(todayChats);
 
-  const chatFilePath = path.join(process.cwd(), "src/data/chat.json");
+  const chatFilePath = path.join(process.cwd(), "/tmp/chat.json");
   const chatsData = await fsPromise.readFile(chatFilePath);
   const chats = JSON.parse(chatsData.toString());
   const currentDate = getCurrentDate();
