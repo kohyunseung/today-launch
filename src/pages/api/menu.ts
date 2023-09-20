@@ -24,7 +24,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (req.method === "POST") {
     const newMenu = req.body.menu;
     todayMenu.push(newMenu);
-    saveData();
+    // saveData();
     res?.socket?.server?.io?.emit("updateMenu");
     res.status(201).json(todayMenu);
   }

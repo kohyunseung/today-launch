@@ -20,7 +20,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
     // get message
     const message = req.body.message;
     todayChat.push(message);
-    saveData();
+    // saveData();
     // dispatch to channel "message"
     res?.socket?.server?.io?.emit("updateChat");
     // return message
