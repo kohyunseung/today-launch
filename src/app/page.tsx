@@ -3,13 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
-import Image from "next/image";
 import styles from "./page.module.css";
-
-interface Message {
-  user: string;
-  msg: string;
-}
 
 const user = "User_" + String(new Date().getTime()).substr(-3);
 
@@ -18,7 +12,7 @@ export default function Home() {
   const [isSpinning, setIsSpinning] = useState(false);
   const inputRef = useRef(null);
   const menuInputRef = useRef(null);
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // init menu
   const [menuInput, setMenuInput] = useState<string>("");
@@ -27,7 +21,7 @@ export default function Home() {
   const [connected, setConnected] = useState<boolean>(false);
 
   // init chat and message
-  const [chat, setChat] = useState<Message[]>([]);
+  const [chat, setChat] = useState<[]>([]);
   const [msg, setMsg] = useState<string>("");
   const [menu, setMenu] = useState([]);
 
@@ -56,9 +50,12 @@ export default function Home() {
 
   useEffect((): any => {
     // connect to socket server
-    const socket = io.connect("https://today-launch.vercel.app/", {
+    const socket = io("http://localhost:3000", {
       path: "/api/socketio",
     });
+    // const socket = io("https://today-launch.vercel.app", {
+    //   path: "/api/socketio",
+    // });
 
     // log socket connection
     socket.on("connect", () => {
@@ -118,10 +115,7 @@ export default function Home() {
   const sendMessage = async () => {
     if (msg) {
       // build message obj
-      const message: Message = {
-        user,
-        msg,
-      };
+      const message = msg;
 
       // dispatch message to other users
       const resp = await fetch("/api/chat", {
@@ -137,7 +131,6 @@ export default function Home() {
     }
 
     // focus after click
-    inputRef?.current?.focus();
   };
 
   const addMenu = async () => {
@@ -155,7 +148,6 @@ export default function Home() {
         // recieveMenu();
       }
     }
-    menuInputRef?.current?.focus();
   };
 
   // 항목에 대한 무작위 색상 배열 생성
@@ -164,6 +156,7 @@ export default function Home() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
     // Canvas를 초기화하고 원을 그립니다.
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -217,9 +210,11 @@ export default function Home() {
     }
   }, [menu]);
 
-  const spinRoulette = (randomIndex, arr) => {
+  const spinRoulette = (randomIndex: number, arr: []) => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
     if (!isSpinning && arr.length > 0) {
       setIsSpinning(true);
 
@@ -229,7 +224,7 @@ export default function Home() {
       const spinDuration = 3000; // 회전 지속 시간 (3초)
       const start = performance.now();
 
-      function animateSpin(time) {
+      const animateSpin = (time: number) => {
         const elapsed = time - start;
         const progress = elapsed / spinDuration;
 
@@ -292,7 +287,7 @@ export default function Home() {
 
           const angle = (2 * Math.PI) / arr.length;
           ctx.fillStyle = "yellow";
-          ctx.innerWidth = 4;
+          ctx.lineWidth = 4;
           const x1 = canvas.width / 2;
           const y1 = canvas.height / 2;
 
@@ -322,7 +317,7 @@ export default function Home() {
           );
           setSelectedItem(arr[randomIndex]);
         }
-      }
+      };
 
       requestAnimationFrame(animateSpin);
     }
@@ -371,7 +366,7 @@ export default function Home() {
       <div className={styles.roulette}>
         <canvas ref={canvasRef} width="200" height="200" />
         {menu.length > 0 ? (
-          <button onClick={sendSpin} disabled={selectedItem}>
+          <button onClick={sendSpin} disabled={!!selectedItem}>
             룰렛 돌리기
           </button>
         ) : (

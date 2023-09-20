@@ -1,7 +1,7 @@
 import { NextApiRequest } from "next";
-import { NextApiResponseServerIO } from "@/src/types/chat.d.ts";
+import { NextApiResponseServerIO } from "@/types/chat";
 
-import { getCurrentDate } from "/src/utils/common";
+import { getCurrentDate } from "@/utils/common";
 
 const fs = require("fs");
 const chats = require("/src/data/chat.json");
@@ -15,7 +15,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (req.method === "POST") {
     // get message
     const message = req.body;
-    todayChat.push(message.msg);
+    todayChat.push(message);
     saveData();
     // dispatch to channel "message"
     res?.socket?.server?.io?.emit("updateChat");

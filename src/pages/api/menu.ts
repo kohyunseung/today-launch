@@ -1,7 +1,7 @@
 import { NextApiRequest } from "next";
-import { NextApiResponseServerIO } from "@/src/types/chat.d.ts";
+import { NextApiResponseServerIO } from "@/types/chat";
 
-import { getCurrentDate } from "/src/utils/common";
+import { getCurrentDate } from "@/utils/common";
 
 const fs = require("fs");
 const menus = require("/src/data/menu.json");

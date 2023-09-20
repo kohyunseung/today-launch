@@ -1,5 +1,5 @@
 import { NextApiRequest } from "next";
-import { NextApiResponseServerIO } from "@/src/types/chat.d.ts";
+import { NextApiResponseServerIO } from "@/types/chat";
 
 export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (req.method === "POST") {
