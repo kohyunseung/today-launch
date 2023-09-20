@@ -14,10 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     console.log("New Socket.io server...");
     // adapt Next's net Server to http Server
     const httpServer: NetServer = res.socket.server as any;
-    const io = new ServerIO<
-      NetServer,
-      { path: string; addTrailingSlash: boolean }
-    >(httpServer, {
+    const io = new ServerIO(httpServer, {
       path: "/api/socketio",
       addTrailingSlash: false,
     });
@@ -26,3 +23,18 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   }
   res.end();
 };
+
+// import { Server } from "socket.io";
+
+// const SocketHandler = (req, res) => {
+//   if (res.socket.server.io) {
+//     console.log("이미 바인딩 되었습니다.");
+//   } else {
+//     console.log("서버-소켓 연결완료");
+//     const io = new Server(res.socket.server);
+//     res.socket.server.io = io;
+//   }
+//   res.end();
+// };
+
+// export default SocketHandler;
