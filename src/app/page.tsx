@@ -53,7 +53,7 @@ export default function Home() {
 
   useEffect((): any => {
     // connect to socket server
-    const socket = io("http://localhost:3000", {
+    const socket = io("", {
       path: "/api/socketio",
     });
     // const socket = io("https://today-launch.vercel.app", {
