@@ -24,7 +24,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (req.method === "POST") {
     const newMenu = req.body.menu;
     todayMenu.push(newMenu);
-    // saveData();
+    saveData();
     res?.socket?.server?.io?.emit("updateMenu");
     res.status(201).json(todayMenu);
   }
@@ -35,5 +35,5 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
 };
 
 function saveData() {
-  fs.writeFileSync("/src/data/menu.json", JSON.stringify(menus, null, 4));
+  fs.writeFileSync("./src/data/menu.json", JSON.stringify(menus, null, 4));
 }

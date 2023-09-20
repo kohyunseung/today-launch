@@ -20,7 +20,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
     // get message
     const message = req.body.message;
     todayChat.push(message);
-    // saveData();
+    saveData();
     // dispatch to channel "message"
     res?.socket?.server?.io?.emit("updateChat");
     // return message
@@ -32,5 +32,5 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
 };
 
 function saveData() {
-  fs.writeFileSync("/src/data/chat.json", JSON.stringify(chats, null, 4));
+  fs.writeFileSync("./src/data/chat.json", JSON.stringify(chats, null, 4));
 }
