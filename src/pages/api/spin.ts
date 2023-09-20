@@ -14,4 +14,8 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
     // return message
     res.status(201).json(randomIndex);
   }
+
+  if (req.method === "OPTIONS") {
+    res.status(200);
+  }
 };

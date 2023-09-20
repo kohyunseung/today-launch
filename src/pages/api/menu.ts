@@ -28,6 +28,10 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
     res?.socket?.server?.io?.emit("updateMenu");
     res.status(201).json(todayMenu);
   }
+
+  if (req.method === "OPTIONS") {
+    res.status(200);
+  }
 };
 
 function saveData() {
