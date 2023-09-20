@@ -35,5 +35,5 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
 };
 
 function saveData() {
-  fs.writeFileSync("src/data/menu.json", JSON.stringify(menus, null, 4));
+  fs.writeFileSync("/src/data/menu.json", JSON.stringify(menus, null, 4));
 }

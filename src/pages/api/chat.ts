@@ -32,5 +32,5 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
 };
 
 function saveData() {
-  fs.writeFileSync("src/data/chat.json", JSON.stringify(chats, null, 4));
+  fs.writeFileSync("/src/data/chat.json", JSON.stringify(chats, null, 4));
 }
