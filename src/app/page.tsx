@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import SocketIOClient from "socket.io-client";
+import { io } from "socket.io-client";
 
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -56,7 +56,7 @@ export default function Home() {
 
   useEffect((): any => {
     // connect to socket server
-    const socket = SocketIOClient.connect("http://localhost:3000", {
+    const socket = io.connect("https://today-launch.vercel.app/", {
       path: "/api/socketio",
     });
 
