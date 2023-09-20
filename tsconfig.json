@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     "./src/types/chat.d.ts"
   ],
-  "exclude": ["node_modules", "./src/pages/api/*.ts"],
+  "exclude": ["node_modules", "./src/pages/api/socketio.ts"],
   "baseUrl": "."
 }
