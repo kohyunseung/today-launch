@@ -7,7 +7,7 @@ import fs from "fs-extra";
 import path from "path";
 
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  const menuFilePath = path.join(process.cwd(), "src/data/menu.json");
+  const menuFilePath = path.join(process.cwd(), "/src/data/menu.json");
   const menus = await fs.readJson(menuFilePath);
   const currentDate = getCurrentDate();
   if (!menus[currentDate]) {

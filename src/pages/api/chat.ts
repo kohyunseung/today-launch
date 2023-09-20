@@ -7,7 +7,7 @@ import fs from "fs-extra";
 import path from "path";
 
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  const chatFilePath = path.join(process.cwd(), "src/data/chat.json");
+  const chatFilePath = path.join(process.cwd(), "/src/data/chat.json");
   const chats = await fs.readJson(chatFilePath);
   const currentDate = getCurrentDate();
   if (!chats[currentDate]) {
