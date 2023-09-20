@@ -3,16 +3,17 @@ import { NextApiResponseServerIO } from "@/types/chat";
 
 import { getCurrentDate } from "@/utils/common";
 
-const fs = require("fs");
-const menus = require("/src/data/menu.json");
-const currentDate = getCurrentDate();
-if (!menus[currentDate]) {
-  menus[currentDate] = [];
-}
+import fs from "fs-extra";
+import path from "path";
 
-const todayMenu = menus[currentDate];
-
-export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
+export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
+  const menuFilePath = path.join(process.cwd(), "src/data/menu.json");
+  const menus = await fs.readJson(menuFilePath);
+  const currentDate = getCurrentDate();
+  if (!menus[currentDate]) {
+    menus[currentDate] = [];
+  }
+  const todayMenu = menus[currentDate];
   if (req.method === "GET") {
     // get message
     // const message = req.body;
@@ -24,7 +25,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (req.method === "POST") {
     const newMenu = req.body.menu;
     todayMenu.push(newMenu);
-    saveData();
+    saveData(menuFilePath, menus);
     res?.socket?.server?.io?.emit("updateMenu");
     res.status(201).json(todayMenu);
   }
@@ -34,6 +35,6 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   }
 };
 
-function saveData() {
-  fs.writeFileSync("./src/data/menu.json", JSON.stringify(menus, null, 4));
+async function saveData(menuFilePath: string, menus: any) {
+  await fs.writeJson(menuFilePath, menus, { spaces: 4 });
 }
