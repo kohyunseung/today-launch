@@ -13,7 +13,6 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   });
 
   const parsedMenus = JSON.parse(todayMenus[0]?.menu || "[]");
-  console.log(parsedMenus);
   if (req.method === "GET") {
     res.status(201).json(parsedMenus);
   }
@@ -22,6 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const newMenu = req.body.menu;
     parsedMenus.push(newMenu);
     saveData(parsedMenus);
+    console.log(parsedMenus);
     res?.socket?.server?.io?.emit("updateMenu");
     res.status(201).json(parsedMenus);
   }

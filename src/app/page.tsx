@@ -9,6 +9,7 @@ import { getCurrentDate } from "@/utils/common";
 import styles from "./page.module.css";
 
 const user = "User_" + String(new Date().getTime()).substr(-3);
+// let socket;
 
 export default function Home() {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -52,36 +53,47 @@ export default function Home() {
   ];
 
   useEffect((): any => {
+    // const socketInitializer = async () => {
+    //   socket = io();
+    //   socket.on("connect", () => {
+    //     console.log("connected");
+    //     setConnected(true);
+    //     recieveMenu();
+    //     recieveChat();
+    //   });
+    //   socket.on("update-chat", () => {
+    //     recieveChat();
+    //   });
+    // };
+    // socketInitializer();
     // connect to socket server
-    // const socket = io("", {
-    //   path: "/api/socketio",
-    // });
-    const socket = io("https://today-launch.vercel.app", {
-      path: "/api/socketio",
+    const socket = io("", {
+      path: "/api/socket",
     });
-
-    // log socket connection
+    // // const socket = io("https://today-launch.vercel.app", {
+    // //   path: "/api/socketio",
+    // // });
+    // // log socket connection
     socket.on("connect", () => {
       setConnected(true);
       recieveMenu();
       recieveChat();
     });
-
-    // update chat on new message dispatched
-    socket.on("updateChat", () => {
-      recieveChat();
-    });
-
+    // // update chat on new message dispatched
     socket.on("spin", (randomIndex, arr) => {
       spinRoulette(randomIndex, arr);
     });
-
     socket.on("updateMenu", () => {
       recieveMenu();
     });
-
+    socket.on("updateChat", () => {
+      recieveChat();
+    });
     // socket disconnet onUnmount if exists
     if (socket) return () => socket.disconnect();
+    // setConnected(true);
+    // recieveMenu();
+    // recieveChat();
   }, []);
 
   const recieveChat = async () => {
@@ -134,6 +146,10 @@ export default function Home() {
         }
       );
 
+      // socket?.emit("chat-change");
+
+      // setChat(response.data);
+
       // reset field if OK
       setMsg("");
     }
@@ -164,6 +180,7 @@ export default function Home() {
       // });
 
       // if (resp.ok) {
+      // setMenu(response.data);
       setMenuInput("");
       // recieveMenu();
       // }
@@ -344,6 +361,8 @@ export default function Home() {
   };
 
   const sendSpin = async () => {
+    // const randomIndex = Math.floor(Math.random() * menu.length);
+    // spinRoulette(randomIndex, menu);
     const response = await axios.post(
       "/api/spin",
       {

@@ -15,7 +15,7 @@ export default async (req, res) => {
     // adapt Next's net Server to http Server
     const httpServer = res.socket.server;
     const io = new ServerIO(httpServer, {
-      path: "/api/socketio",
+      path: "/api/socket",
       addTrailingSlash: false,
     });
     // append SocketIO server to Next.js socket server response
@@ -31,8 +31,17 @@ export default async (req, res) => {
 //     console.log("이미 바인딩 되었습니다.");
 //   } else {
 //     console.log("서버-소켓 연결완료");
-//     const io = new Server(res.socket.server);
+//     const io = new Server(res.socket.server, {
+//       addTrailingSlash: false,
+//     });
 //     res.socket.server.io = io;
+
+//     io.on("connection", (socket) => {
+//       socket.on("chat-change", (msg) => {
+//         console.log("chat-change!!");
+//         socket.broadcast.emit("update-chat");
+//       });
+//     });
 //   }
 //   res.end();
 // };
