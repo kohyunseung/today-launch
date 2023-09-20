@@ -5,47 +5,55 @@ import { getCurrentDate } from "@/utils/common";
 
 import { db } from "@/lib/db";
 
-import fsPromise from "fs/promises";
-import path from "path";
-
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  // const todayChats = await db.chat.findMany({
-  //   where: {
-  //     date: getCurrentDate(),
-  //   },
-  // });
+  const todayChats = await db.chat.findMany({
+    where: {
+      date: getCurrentDate(),
+    },
+  });
 
-  // console.log(todayChats);
+  const parsedChats = JSON.parse(todayChats[0]?.message || "[]");
 
-  const chatFilePath = path.join(process.cwd(), "/tmp/chat.json");
-  const chatsData = await fsPromise.readFile(chatFilePath);
-  const chats = JSON.parse(chatsData.toString());
-  const currentDate = getCurrentDate();
-  if (!chats[currentDate]) {
-    chats[currentDate] = [];
-  }
-  const todayChat = chats[currentDate];
+  // const chatFilePath = path.join(process.cwd(), "/tmp/chat.json");
+  // const chatsData = await fsPromise.readFile(chatFilePath);
+  // const chats = JSON.parse(chatsData.toString());
+  // const currentDate = getCurrentDate();
+  // if (!chats[currentDate]) {
+  //   chats[currentDate] = [];
+  // }
+  // const todayChat = chats[currentDate];
 
   if (req.method === "GET") {
-    res.status(201).json(todayChat);
+    res.status(201).json(parsedChats);
   }
   if (req.method === "POST") {
     // get message
     const message = req.body.message;
-    todayChat.push(message);
-    saveData(chatFilePath, chats);
+    parsedChats.push(message);
+    saveData(parsedChats);
     // dispatch to channel "message"
     res?.socket?.server?.io?.emit("updateChat");
     // return message
-    res.status(201).json(todayChat);
+    res.status(201).json(parsedChats);
   }
   if (req.method === "OPTIONS") {
     res.status(200);
   }
 };
 
-async function saveData(chatFilePath: string, chats: any) {
-  await fsPromise.writeFile(chatFilePath, JSON.stringify(chats));
+async function saveData(chats: any) {
+  const upsertUser = await db.chat.upsert({
+    where: {
+      date: getCurrentDate(),
+    },
+    update: {
+      message: JSON.stringify(chats),
+    },
+    create: {
+      message: JSON.stringify(chats),
+      date: getCurrentDate(),
+    },
+  });
 }
 
 // chat.json 파일 경로 설정

@@ -53,12 +53,12 @@ export default function Home() {
 
   useEffect((): any => {
     // connect to socket server
-    // const socket = io("", {
-    //   path: "/api/socketio",
-    // });
-    const socket = io("https://today-launch.vercel.app", {
+    const socket = io("", {
       path: "/api/socketio",
     });
+    // const socket = io("https://today-launch.vercel.app", {
+    //   path: "/api/socketio",
+    // });
 
     // log socket connection
     socket.on("connect", () => {
@@ -96,23 +96,16 @@ export default function Home() {
   };
 
   const recieveMenu = async () => {
-    try {
-      const resp = await fetch("/api/menu", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    const resp = await fetch("/api/menu", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (resp.ok) {
-        const menuData = await resp.json();
-        setMenu(menuData);
-      } else {
-        console.error("메뉴 데이터를 가져오는데 문제가 발생했습니다.");
-      }
-    } catch (error) {
-      console.error("메뉴 데이터를 가져오는데 오류가 발생했습니다.", error);
-    }
+    const menuData = await resp.json();
+    setMenu(menuData);
+    console.log(menuData);
   };
 
   const sendMessage = async () => {

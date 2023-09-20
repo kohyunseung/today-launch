@@ -3,31 +3,27 @@ import { NextApiResponseServerIO } from "@/types/chat";
 
 import { getCurrentDate } from "@/utils/common";
 
-import fs from "fs-extra";
-import path from "path";
+import { db } from "@/lib/db";
 
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  const menuFilePath = path.join(process.cwd(), "/tmp/menu.json");
-  const menus = await fs.readJson(menuFilePath);
-  const currentDate = getCurrentDate();
-  if (!menus[currentDate]) {
-    menus[currentDate] = [];
-  }
-  const todayMenu = menus[currentDate];
-  if (req.method === "GET") {
-    // get message
-    // const message = req.body;
+  const todayMenus = await db.menu.findMany({
+    where: {
+      date: getCurrentDate(),
+    },
+  });
 
-    // return message
-    res.status(201).json(todayMenu);
+  const parsedMenus = JSON.parse(todayMenus[0]?.menu || "[]");
+  console.log(parsedMenus);
+  if (req.method === "GET") {
+    res.status(201).json(parsedMenus);
   }
 
   if (req.method === "POST") {
     const newMenu = req.body.menu;
-    todayMenu.push(newMenu);
-    saveData(menuFilePath, menus);
+    parsedMenus.push(newMenu);
+    saveData(parsedMenus);
     res?.socket?.server?.io?.emit("updateMenu");
-    res.status(201).json(todayMenu);
+    res.status(201).json(parsedMenus);
   }
 
   if (req.method === "OPTIONS") {
@@ -35,6 +31,17 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
   }
 };
 
-async function saveData(menuFilePath: string, menus: any) {
-  await fs.writeJson(menuFilePath, menus, { spaces: 4 });
+async function saveData(menus: any) {
+  const upsertUser = await db.menu.upsert({
+    where: {
+      date: getCurrentDate(),
+    },
+    update: {
+      menu: JSON.stringify(menus),
+    },
+    create: {
+      menu: JSON.stringify(menus),
+      date: getCurrentDate(),
+    },
+  });
 }
