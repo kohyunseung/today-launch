@@ -3,19 +3,29 @@ import { NextApiResponseServerIO } from "@/types/chat";
 
 import { getCurrentDate } from "@/utils/common";
 
-import fs from "fs-extra";
+import { db } from "@/lib/db";
+
+import fsPromise from "fs/promises";
 import path from "path";
 
 export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  const chatFilePath = path.join(process.cwd(), "/src/data/chat.json");
-  const chats = await fs.readJson(chatFilePath);
+  // const todayChats = await db.chat.findMany({
+  //   where: {
+  //     date: getCurrentDate(),
+  //   },
+  // });
+
+  // console.log(todayChats);
+
+  const chatFilePath = path.join(process.cwd(), "src/data/chat.json");
+  const chatsData = await fsPromise.readFile(chatFilePath);
+  const chats = JSON.parse(chatsData.toString());
   const currentDate = getCurrentDate();
   if (!chats[currentDate]) {
     chats[currentDate] = [];
   }
   const todayChat = chats[currentDate];
 
-  console.log(req);
   if (req.method === "GET") {
     res.status(201).json(todayChat);
   }
@@ -35,7 +45,7 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
 };
 
 async function saveData(chatFilePath: string, chats: any) {
-  await fs.writeJson(chatFilePath, chats, { spaces: 4 });
+  await fsPromise.writeFile(chatFilePath, JSON.stringify(chats));
 }
 
 // chat.json 파일 경로 설정
