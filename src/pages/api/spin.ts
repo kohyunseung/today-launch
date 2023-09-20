@@ -6,7 +6,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
     // get message
 
     // dispatch to channel "message"
-    const menu = req.body;
+    const menu = req.body.menu;
     console.log(menu);
     const randomIndex = Math.floor(Math.random() * menu.length);
     res?.socket?.server?.io?.emit("spin", randomIndex, menu);

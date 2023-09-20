@@ -6,15 +6,19 @@ import { getCurrentDate } from "@/utils/common";
 const fs = require("fs");
 const chats = require("/src/data/chat.json");
 const currentDate = getCurrentDate();
-const todayChat = chats[currentDate] || [];
+if (!chats[currentDate]) {
+  chats[currentDate] = [];
+}
+const todayChat = chats[currentDate];
 
 export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
+  console.log(req);
   if (req.method === "GET") {
     res.status(201).json(todayChat);
   }
   if (req.method === "POST") {
     // get message
-    const message = req.body;
+    const message = req.body.message;
     todayChat.push(message);
     saveData();
     // dispatch to channel "message"

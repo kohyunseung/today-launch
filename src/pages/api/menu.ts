@@ -6,7 +6,11 @@ import { getCurrentDate } from "@/utils/common";
 const fs = require("fs");
 const menus = require("/src/data/menu.json");
 const currentDate = getCurrentDate();
-const todayMenu = menus[currentDate] || [];
+if (!menus[currentDate]) {
+  menus[currentDate] = [];
+}
+
+const todayMenu = menus[currentDate];
 
 export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   if (req.method === "GET") {
@@ -18,7 +22,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   }
 
   if (req.method === "POST") {
-    const newMenu = req.body;
+    const newMenu = req.body.menu;
     todayMenu.push(newMenu);
     saveData();
     res?.socket?.server?.io?.emit("updateMenu");

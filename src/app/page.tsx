@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
+import axios from "axios";
 
 import { getCurrentDate } from "@/utils/common";
 
@@ -52,12 +53,12 @@ export default function Home() {
 
   useEffect((): any => {
     // connect to socket server
-    // const socket = io("http://localhost:3000", {
-    //   path: "/api/socketio",
-    // });
-    const socket = io("https://today-launch.vercel.app", {
+    const socket = io("http://localhost:3000", {
       path: "/api/socketio",
     });
+    // const socket = io("https://today-launch.vercel.app", {
+    //   path: "/api/socketio",
+    // });
 
     // log socket connection
     socket.on("connect", () => {
@@ -120,16 +121,20 @@ export default function Home() {
       const message = msg;
 
       // dispatch message to other users
-      const resp = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(message),
+      // const resp = await fetch("/api/chat", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(message),
+      // });
+
+      const response = await axios.post("/api/chat", {
+        message,
       });
 
       // reset field if OK
-      if (resp.ok) setMsg("");
+      setMsg("");
     }
 
     // focus after click
@@ -137,18 +142,22 @@ export default function Home() {
 
   const addMenu = async () => {
     if (menuInput) {
-      const resp = await fetch("/api/menu", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(menuInput),
+      const response = await axios.post("/api/menu", {
+        menu: menuInput,
       });
 
-      if (resp.ok) {
-        setMenuInput("");
-        // recieveMenu();
-      }
+      // const resp = await fetch("/api/menu", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(menuInput),
+      // });
+
+      // if (resp.ok) {
+      setMenuInput("");
+      // recieveMenu();
+      // }
     }
   };
 
@@ -326,14 +335,18 @@ export default function Home() {
   };
 
   const sendSpin = async () => {
-    const resp = await fetch("/api/spin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(menu),
+    const response = await axios.post("/api/spin", {
+      menu,
     });
-    if (resp.ok) console.log("ok");
+
+    // const resp = await fetch("/api/spin", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(menu),
+    // });
+    console.log("ok");
   };
 
   return (
